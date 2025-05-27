@@ -29,7 +29,8 @@ const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 
 // we can also explicitly mention the provider
-const program = new Program(CounterIDL as Counter, provider);
+const program = new Program(CounterIDL as Counter, provider) as Program<Counter>;
+
 
 const counter = web3.Keypair.generate(); 
 console.log("counter address:", counter.publicKey.toBase58());

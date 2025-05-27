@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("8djcQNy8ZoJ8KgovwNUFsM5bB9BYLtD32vxUc2STumrN");
+declare_id!("BDXN7XF9nXeBfRrqTooF8XRdv8SCG2GT1GHi5KNkT1im");
 
 #[program]
 pub mod counter {
@@ -13,6 +13,24 @@ pub mod counter {
         msg!("Current Count: { }", counter.count);
         Ok(())
     }
+
+    pub fn increment(ctx: Context<Increment>) -> Result<()> {
+        let counter = &mut ctx.accounts.counter;
+        msg!("Previous Count: { }", counter.count);
+
+        counter.count += 1;
+        msg!("Current Count1: { }", counter.count);
+
+        counter.count = counter.count.checked_add(1).unwrap();
+        msg!("Current Count2: { }", counter.count);
+
+        counter.count = counter.count.checked_add(1).ok_or(ProgramError::InvalidArgument)?;
+        msg!("Current Count3: { }", counter.count);
+        
+        Ok(())
+    }
+
+
 }
 
 #[account]
@@ -34,4 +52,12 @@ pub struct Initialize<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>,
+}
+
+
+#[derive(Accounts)]
+pub struct Increment<'info> {
+    #[account(mut)]
+    pub counter: Account<'info, Counter>,
+    pub user: Signer<'info>,
 }
