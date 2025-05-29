@@ -48,6 +48,16 @@ pub mod counter_pda {
         Ok(())
     }
 
+    // 也用结构体 SetOnlyOwner
+    pub fn reset_counter(ctx: Context<SetOnlyOwner>) -> Result<()> {
+        let c = &mut ctx.accounts.counter;
+
+        c.count = 0;
+
+        msg!("Counter Reset to: {}", c.count);
+        Ok(())
+    }
+
     pub fn set_remark(ctx: Context<SetRemark>, counter_name: String, remark: String) -> Result<()> {
         let c = &mut ctx.accounts.counter;
 
